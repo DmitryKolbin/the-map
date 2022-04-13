@@ -1,3 +1,3 @@
-module github.com/dmitryKolbin/the-map
+module github.com/DmitryKolbin/the-map
 
 go 1.18
