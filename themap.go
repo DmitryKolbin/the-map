@@ -6,6 +6,8 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
+	"net/url"
+	"path"
 	"strconv"
 )
 
@@ -26,6 +28,12 @@ const (
 	StatePaid             = "Paid"
 	StateInProcess        = "InProcess"
 	StateRejected         = "Rejected"
+
+	SessionTypePay = "pay"
+	SessionTypeAdd = "add"
+
+	PaymentTypeOneStep = "OneStep"
+	PaymentTypeTwoStep = "TwoStep"
 )
 
 type MapPaymentInfo struct {
@@ -93,6 +101,29 @@ type Credential struct {
 	MerchantName     string `json:"merchant_name"`
 	MerchantPassword string `json:"merchant_password"`
 	TerminalPassword string `json:"terminal_password"`
+}
+
+type InitRequest struct {
+	baseRequestKey
+
+	AddCard         bool              `json:"add_card"`
+	Type            string            `json:"type"`
+	PaymentType     string            `json:"payment_type"`
+	Lifetime        int               `json:"lifetime"`
+	MerchantOrderId string            `json:"merchant_order_id"`
+	Amount          int64             `json:"amount"`
+	Credential      Credential        `json:"credential,omitempty"`
+	CustomParamsRdy map[string]string `json:"custom_params_rdy,omitempty"`
+	Recurrent       bool              `json:"recurrent"`
+}
+
+type InitResponse struct {
+	baseResponse
+
+	OrderId     string `json:"OrderId"`
+	Amount      int64  `json:"Amount"`
+	Type        string `json:"Type"`
+	SessionGUID string `json:"SessionGUID"`
 }
 
 type BlockRequest struct {
@@ -215,6 +246,8 @@ type RemoveCardResponse struct {
 }
 
 type MapPaymentService interface {
+	Init(request InitRequest) (InitResponse, error)
+	CreatePaymentUrl(sessionId string) (string, error)
 	Block(request BlockRequest) (BlockResponse, error)
 	Block3DS(orderId string, pares string) (Block3DSResponse, error)
 	Charge(orderId string, amount int64) (ChargeResponse, error)
@@ -235,6 +268,20 @@ func NewMapPaymentService(url string, key string) MapPaymentService {
 		url: url,
 		key: key,
 	}
+}
+
+func (ms *mapPaymentService) Init(request InitRequest) (InitResponse, error) {
+	return makeRequestGeneric[InitResponse](*ms, http.MethodPost, "/Init", &request, InitResponse{})
+}
+
+func (ms *mapPaymentService) CreatePaymentUrl(sessionId string) (string, error) {
+	u, err := url.Parse(ms.url)
+	if err != nil {
+		return "", err
+	}
+	u.Path = path.Join(u.Path, "createPayment ")
+	u.Query().Add("SessionID", sessionId)
+	return u.String(), nil
 }
 
 func (ms *mapPaymentService) Block(request BlockRequest) (BlockResponse, error) {
