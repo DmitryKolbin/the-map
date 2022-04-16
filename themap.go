@@ -209,10 +209,13 @@ type OrderStateRequest struct {
 type OrderStateResponse struct {
 	baseResponse
 
-	OrderId         string `json:"OrderId"`
-	Amount          int64  `json:"Amount"`
-	State           string `json:"State"`
-	MerchantOrderId string `json:"MerchantOrderId"`
+	OrderId         string   `json:"OrderId"`
+	Amount          int64    `json:"Amount"`
+	State           string   `json:"State"`
+	MerchantOrderId string   `json:"MerchantOrderId"`
+	FeePercent      *float64 `json:"FeePercent"`
+	CardType        string   `json:"CardType"`
+	PanMask         string   `json:"PanMask"`
 }
 
 type StoreCardRequest struct {
