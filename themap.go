@@ -106,15 +106,15 @@ type Credential struct {
 type InitRequest struct {
 	baseRequestKey
 
-	AddCard         bool              `json:"add_card"`
-	Type            string            `json:"type"`
-	PaymentType     string            `json:"payment_type"`
-	Lifetime        int               `json:"lifetime"`
-	MerchantOrderId string            `json:"merchant_order_id"`
-	Amount          int64             `json:"amount"`
-	Credential      Credential        `json:"credential,omitempty"`
-	CustomParamsRdy map[string]string `json:"custom_params_rdy,omitempty"`
-	Recurrent       bool              `json:"recurrent"`
+	AddCard         bool       `json:"add_card"`
+	Type            string     `json:"type"`
+	PaymentType     string     `json:"payment_type"`
+	Lifetime        int        `json:"lifetime"`
+	MerchantOrderId string     `json:"merchant_order_id"`
+	Amount          int64      `json:"amount"`
+	Credential      Credential `json:"credential,omitempty"`
+	CustomParamsRaw string     `json:"custom_params_raw,omitempty"`
+	Recurrent       bool       `json:"recurrent"`
 }
 
 type InitResponse struct {
