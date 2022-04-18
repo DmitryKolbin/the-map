@@ -282,8 +282,10 @@ func (ms *mapPaymentService) CreatePaymentUrl(sessionId string) (string, error) 
 	if err != nil {
 		return "", err
 	}
-	u.Path = path.Join(u.Path, "createPayment ")
-	u.Query().Add("SessionID", sessionId)
+	u.Path = path.Join(u.Path, "createPayment")
+	query := u.Query()
+	query.Set("SessionID", sessionId)
+	u.RawQuery = query.Encode()
 	return u.String(), nil
 }
 
