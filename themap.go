@@ -317,18 +317,18 @@ func (ms *mapPaymentService) GetState(orderId string) (OrderStateResponse, error
 }
 
 func (ms *mapPaymentService) StoreCard(request StoreCardRequest) (StoreCardResponse, error) {
-	return makeRequestGeneric[StoreCardResponse](*ms, http.MethodPost, "/storeCard ", &request, StoreCardResponse{})
+	return makeRequestGeneric[StoreCardResponse](*ms, http.MethodPost, "/storeCard", &request, StoreCardResponse{})
 }
 
 func (ms *mapPaymentService) RemoveCard(request RemoveCardRequest) (RemoveCardResponse, error) {
-	return makeRequestGeneric[RemoveCardResponse](*ms, http.MethodPost, "/removeCard ", &request, RemoveCardResponse{})
+	return makeRequestGeneric[RemoveCardResponse](*ms, http.MethodPost, "/removeCard", &request, RemoveCardResponse{})
 }
 
 func (ms *mapPaymentService) Unblock(request UnblockRequest) (UnblockResponse, error) {
-	return makeRequestGeneric[UnblockResponse](*ms, http.MethodPost, "/Unblock ", &request, UnblockResponse{})
+	return makeRequestGeneric[UnblockResponse](*ms, http.MethodPost, "/Unblock", &request, UnblockResponse{})
 }
 func (ms *mapPaymentService) Refund(request RefundRequest) (RefundResponse, error) {
-	return makeRequestGeneric[RefundResponse](*ms, http.MethodPost, "/Refund ", &request, RefundResponse{})
+	return makeRequestGeneric[RefundResponse](*ms, http.MethodPost, "/Refund", &request, RefundResponse{})
 }
 
 func makeRequestGeneric[res mapResponse](ms mapPaymentService, method, endpoint string, request mapRequest, response res) (res, error) {
