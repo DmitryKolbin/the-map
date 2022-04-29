@@ -357,6 +357,9 @@ func makeRequestGeneric[res mapResponse](ms mapPaymentService, method, endpoint 
 			return response, err
 		}
 		if !response.getSuccess() {
+			if len(response.getErrMessage()) == 0 {
+				return response, errors.New(response.getErrCode())
+			}
 			return response, errors.New(response.getErrCode() + " " + response.getErrMessage())
 		}
 
